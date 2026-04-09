@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FF Bio Maker | @sulav_codex_ff</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="bg-particles">
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo-group">
+        <div class="logo-icon">FF</div>
+        <div>
+          <div class="logo-title">BIO MAKER</div>
+          <div class="logo-sub">Free Fire Bio Format Tool</div>
+        </div>
+      </div>
+      <div class="header-credits">
+        <div class="credit-row"><span class="credit-lbl">DEVELOPER</span><a href="https://t.me/sulav_codex_ff" target="_blank">@sulav_codex_ff</a></div>
+        <div class="credit-row"><span class="credit-lbl">CHANNEL</span><a href="https://t.me/sulav_don2" target="_blank" class="blue">@sulav_don2</a></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- ========== LEFT COLUMN ========== -->
+    <div class="left-col">
+
+      <!-- STEP 1: AUTHORISE -->
+      <div class="card" id="authCard">
+        <div class="card-head">
+          <div class="step-badge">01</div>
+          <h2>Authorise Account</h2>
+          <div id="authStatusDot" class="status-dot idle" title="Not authorised"></div>
+        </div>
+
+        <div class="auth-tabs">
+          <button class="atab active" data-tab="jwt" onclick="switchAuthTab('jwt')">JWT</button>
+          <button class="atab" data-tab="uidpass" onclick="switchAuthTab('uidpass')">UID / Pass</button>
+          <button class="atab" data-tab="token" onclick="switchAuthTab('token')">Access Token</button>
+        </div>
+
+        <div id="atab-jwt" class="atab-pane active">
+          <div class="field-group">
+            <label>JWT Token</label>
+            <input id="inp-jwt" type="text" class="inp" placeholder="Paste JWT token..."/>
+          </div>
+        </div>
+        <div id="atab-uidpass" class="atab-pane">
+          <div class="field-group">
+            <label>Player UID</label>
+            <input id="inp-uid" type="text" class="inp" placeholder="Enter UID..."/>
+          </div>
+          <div class="field-group">
+            <label>Password</label>
+            <input id="inp-pass" type="password" class="inp" placeholder="Enter password..."/>
+          </div>
+        </div>
+        <div id="atab-token" class="atab-pane">
+          <div class="field-group">
+            <label>Access Token</label>
+            <input id="inp-token" type="text" class="inp" placeholder="Paste access token..."/>
+          </div>
+        </div>
+
+        <button class="btn btn-auth" id="authBtn" onclick="doAuthorise()">
+          <span class="btn-icon">🔐</span>
+          <span class="btn-label">Authorise</span>
+        </button>
+
+        <div id="authLoader" class="loader-row hidden"><div class="spinner"></div><span>Verifying account...</span></div>
+
+        <!-- Player card (shown after auth) -->
+        <div id="playerCard" class="player-card hidden">
+          <div class="player-card-head">
+            <div class="player-avatar">
+              <span id="playerInitial">?</span>
+            </div>
+            <div class="player-info">
+              <div id="playerName" class="player-name">—</div>
+              <div class="player-meta-row">
+                <span class="meta-chip uid-chip">UID <span id="playerUID">—</span></span>
+                <span class="meta-chip region-chip">🌏 <span id="playerRegion">—</span></span>
+              </div>
+            </div>
+            <div id="playerStatusBadge" class="player-status-badge active">✅ ACTIVE</div>
+          </div>
+          <div class="player-details-row">
+            <div class="detail-item">
+              <div class="detail-lbl">Login Method</div>
+              <div id="playerMethod" class="detail-val">—</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-lbl">Open ID</div>
+              <div id="playerOpenID" class="detail-val mono">—</div>
+            </div>
+          </div>
+          <button class="btn btn-reauth" onclick="resetAuth()">🔄 Re-Authorise</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: BIO EDITOR -->
+      <div class="card" id="bioCard">
+        <div class="card-head">
+          <div class="step-badge">02</div>
+          <h2>Bio Editor</h2>
+          <div class="live-pill">LIVE</div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="toolbar-section">
+            <span class="tlabel">FORMAT</span>
+            <button class="fmt-btn" onclick="insertCode('[B]')"><b>B</b> Bold</button>
+            <button class="fmt-btn highlight" onclick="insertCode('[C]')"><span class="h-mark">H</span> Highlight</button>
+          </div>
+          <div class="toolbar-section">
+            <span class="tlabel">COLORS</span>
+            <div class="color-palette">
+              <button class="cbtn" style="background:#FF2400" onclick="insertCode('[FF2400]')" title="Red"></button>
+              <button class="cbtn" style="background:#00FF00" onclick="insertCode('[00FF00]')" title="Green"></button>
+              <button class="cbtn" style="background:#4488FF" onclick="insertCode('[0000FF]')" title="Blue"></button>
+              <button class="cbtn" style="background:#FFFF00" onclick="insertCode('[FFFF00]')" title="Yellow"></button>
+              <button class="cbtn" style="background:#FF00FF" onclick="insertCode('[FF00FF]')" title="Magenta"></button>
+              <button class="cbtn" style="background:#00FFFF" onclick="insertCode('[00FFFF]')" title="Cyan"></button>
+              <button class="cbtn" style="background:#FFA500" onclick="insertCode('[FFA500]')" title="Orange"></button>
+              <button class="cbtn" style="background:#FFD700" onclick="insertCode('[FFD700]')" title="Gold"></button>
+              <button class="cbtn" style="background:#800080" onclick="insertCode('[800080]')" title="Purple"></button>
+              <button class="cbtn" style="background:#FF69B4" onclick="insertCode('[FFC0CB]')" title="Pink"></button>
+              <button class="cbtn" style="background:#ADD8E6" onclick="insertCode('[ADD8E6]')" title="Light Blue"></button>
+              <button class="cbtn" style="background:#008080" onclick="insertCode('[008080]')" title="Teal"></button>
+              <button class="cbtn" style="background:#008000" onclick="insertCode('[008000]')" title="Dark Green"></button>
+              <button class="cbtn" style="background:#A52A2A" onclick="insertCode('[A52A2A]')" title="Brown"></button>
+              <button class="cbtn" style="background:#C0C0C0" onclick="insertCode('[C0C0C0]')" title="Silver"></button>
+              <button class="cbtn" style="background:#808080" onclick="insertCode('[808080]')" title="Gray"></button>
+              <button class="cbtn" style="background:#800000" onclick="insertCode('[800000]')" title="Maroon"></button>
+              <button class="cbtn" style="background:#FFFFFF;border:1px solid #444" onclick="insertCode('[FFFFFF]')" title="White"></button>
+              <button class="cbtn" style="background:#000000;border:1px solid #555" onclick="insertCode('[000000]')" title="Black"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bio-wrap">
+          <textarea id="bioInput" class="bio-textarea" maxlength="500"
+            placeholder="Type your bio here...&#10;Example: [FF2400][B]Sulav[FFFFFF] is a Free Fire pro"
+            oninput="onBioInput()"></textarea>
+          <div class="bio-footer">
+            <span><span id="charCount">0</span> / 500</span>
+            <button class="clear-btn" onclick="clearBio()">✕ Clear</button>
+          </div>
+        </div>
+
+        <div class="bio-actions">
+          <button class="btn btn-copy" onclick="copyBio()">📋 Copy Bio</button>
+          <button class="btn btn-change" id="changeBioBtn" onclick="doChangeBio()">
+            <span class="btn-icon">✅</span>
+            <span class="btn-label">Change Bio</span>
+          </button>
+        </div>
+        <div id="copyFeedback" class="copy-ok hidden">✅ Copied to clipboard!</div>
+        <div id="bioLoader" class="loader-row hidden"><div class="spinner"></div><span>Uploading bio...</span></div>
+
+        <!-- FULL OUTPUT -->
+        <div id="outputPanel" class="output-panel hidden">
+          <div class="output-head">
+            <span id="outputStatusIcon" class="output-icon">✅</span>
+            <span id="outputStatusText" class="output-title">Bio Changed Successfully</span>
+          </div>
+          <div class="output-grid">
+            <div class="out-row"><span class="out-lbl">Status</span><span id="out-status" class="out-val"></span></div>
+            <div class="out-row"><span class="out-lbl">Code</span><span id="out-code" class="out-val mono"></span></div>
+            <div class="out-row"><span class="out-lbl">Player Name</span><span id="out-name" class="out-val"></span></div>
+            <div class="out-row"><span class="out-lbl">UID</span><span id="out-uid" class="out-val mono"></span></div>
+            <div class="out-row"><span class="out-lbl">Region</span><span id="out-region" class="out-val"></span></div>
+            <div class="out-row"><span class="out-lbl">Bio Set</span><span id="out-bio" class="out-val"></span></div>
+            <div class="out-row"><span class="out-lbl">Login Method</span><span id="out-method" class="out-val"></span></div>
+            <div class="out-row"><span class="out-lbl">Open ID</span><span id="out-openid" class="out-val mono small"></span></div>
+            <div class="out-row"><span class="out-lbl">Server Response</span><span id="out-server" class="out-val mono small"></span></div>
+          </div>
+          <div class="output-credits">
+            Developer: <a href="https://t.me/sulav_codex_ff" target="_blank">@sulav_codex_ff</a> &nbsp;·&nbsp;
+            Channel: <a href="https://t.me/sulav_don2" target="_blank">@sulav_don2</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORMAT REFERENCE -->
+      <div class="card ref-card">
+        <div class="card-head"><span>📋</span><h2>Format Reference</h2></div>
+        <div class="ref-cols">
+          <div>
+            <div class="ref-section-title">📝 Format Codes</div>
+            <div class="ref-item"><code>[B]</code> Bold text</div>
+            <div class="ref-item"><code>[C]</code> Highlighted text</div>
+          </div>
+          <div>
+            <div class="ref-section-title">🎨 Color Codes</div>
+            <div class="ref-item"><span class="dot" style="background:#FF2400"></span><code>[FF2400]</code> Red</div>
+            <div class="ref-item"><span class="dot" style="background:#00FF00"></span><code>[00FF00]</code> Green</div>
+            <div class="ref-item"><span class="dot" style="background:#4488FF"></span><code>[0000FF]</code> Blue</div>
+            <div class="ref-item"><span class="dot" style="background:#FFFF00"></span><code>[FFFF00]</code> Yellow</div>
+            <div class="ref-item"><span class="dot" style="background:#FF00FF"></span><code>[FF00FF]</code> Magenta</div>
+            <div class="ref-item"><span class="dot" style="background:#00FFFF"></span><code>[00FFFF]</code> Cyan</div>
+            <div class="ref-item"><span class="dot" style="background:#FFA500"></span><code>[FFA500]</code> Orange</div>
+            <div class="ref-item"><span class="dot" style="background:#FFD700"></span><code>[FFD700]</code> Gold</div>
+            <div class="ref-item"><span class="dot" style="background:#800080"></span><code>[800080]</code> Purple</div>
+            <div class="ref-item"><span class="dot" style="background:#FFC0CB"></span><code>[FFC0CB]</code> Pink</div>
+            <div class="ref-item"><span class="dot" style="background:#ADD8E6"></span><code>[ADD8E6]</code> Light Blue</div>
+            <div class="ref-item"><span class="dot" style="background:#FFD700;border:1px solid #555"></span><code>[FFD700]</code> Gold</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /left-col -->
+
+    <!-- ========== RIGHT COLUMN ========== -->
+    <div class="right-col">
+
+      <!-- PHONE PREVIEW -->
+      <div class="card preview-card">
+        <div class="card-head">
+          <span>🎮</span>
+          <h2>Free Fire Preview</h2>
+          <div class="live-pill">LIVE</div>
+        </div>
+        <div class="phone-wrap">
+          <div class="phone">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="ff-ui">
+                <div class="ff-topbar">
+                  <div class="ff-avatar-block">
+                    <div class="ff-avatar">👤</div>
+                    <div class="ff-lvl">99</div>
+                  </div>
+                  <div class="ff-player-block">
+                    <div class="ff-pname" id="previewName">SULAV</div>
+                    <div class="ff-puid">UID: <span id="previewUID">———</span></div>
+                    <div class="ff-rank">💎 Heroic</div>
+                  </div>
+                </div>
+                <div class="ff-bio-area">
+                  <div class="ff-bio-label">BIO</div>
+                  <div class="ff-bio-box">
+                    <div id="bioPreview" class="ff-bio-text">
+                      <span class="ph-text">Type your bio to see preview...</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="ff-stats">
+                  <div class="ff-stat"><div class="ff-stat-v">4821</div><div class="ff-stat-k">Matches</div></div>
+                  <div class="ff-stat"><div class="ff-stat-v">68.4%</div><div class="ff-stat-k">Win Rate</div></div>
+                  <div class="ff-stat"><div class="ff-stat-v">8.2</div><div class="ff-stat-k">K/D</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API DOCS -->
+      <div class="card docs-card">
+        <div class="card-head"><span>📡</span><h2>API Endpoints</h2></div>
+        <div class="endpoint">
+          <span class="method">GET/POST</span>
+          <code>/authorise</code>
+          <span class="ep-desc">Validate credentials &amp; get player info</span>
+        </div>
+        <div class="endpoint">
+          <span class="method">GET/POST</span>
+          <code>/bio_upload</code>
+          <span class="ep-desc">Authorise + upload bio in one call</span>
+        </div>
+        <div class="param-list">
+          <div class="param"><code>bio</code> <span class="req">required for /bio_upload</span></div>
+          <div class="param"><code>jwt</code> — Direct JWT token</div>
+          <div class="param"><code>uid</code> + <code>pass</code> — UID &amp; password</div>
+          <div class="param"><code>access_token</code> — Garena access token</div>
+        </div>
+      </div>
+
+    </div><!-- /right-col -->
+  </div><!-- /layout -->
+
+  <footer class="footer">
+    <a href="https://t.me/sulav_codex_ff" target="_blank">@sulav_codex_ff</a>
+    <span>·</span>
+    <a href="https://t.me/sulav_don2" target="_blank">@sulav_don2</a>
+    <span>·</span>
+    <span>FF Bio Maker © 2024</span>
+  </footer>
+
+</div><!-- /app -->
+
+<script src="/static/script.js"></script>
+</body>
+</html>
